@@ -2,9 +2,4 @@ services:
   - type: web
     name: thai-tax-calculator
     env: static
-    buildCommand: ""
     staticPublishPath: .
-    headers:
-      - path: /*
-        name: Cache-Control
-        value: no-cache
