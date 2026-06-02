@@ -12,8 +12,9 @@ app.use(express.json());
 const SPREADSHEET_ID = '1CCjq_7liQn3c0VYAGCQu68CWjuTkkAJrevfAwWhMsEY';
 const SHEET_NAME = 'KOLs';
 
-const credPath = path.join(__dirname, 'divine-command-498210-j1-ca1c88d514a1.json');
-const credentials = JSON.parse(fs.readFileSync(credPath, 'utf8'));
+const credentials = process.env.GOOGLE_CREDENTIALS_JSON
+  ? JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON)
+  : JSON.parse(fs.readFileSync(path.join(__dirname, 'divine-command-498210-j1-ca1c88d514a1.json'), 'utf8'));
 
 const auth = new google.auth.GoogleAuth({
   credentials,
