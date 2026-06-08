@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { getResultBadgeClass, getStatusColor } from '../utils/scoring'
 
-const STATUS_OPTIONS = ['ยังไม่ติดต่อ', 'ติดต่อแล้ว', 'รอ Insight', 'ตกลงแล้ว', 'ปฏิเสธ']
+const STATUS_OPTIONS = ['แจ้งเข้ามา', 'ยังไม่ติดต่อ', 'ติดต่อแล้ว', 'รอ Insight', 'ตกลงแล้ว', 'ปฏิเสธ']
 
 function fmt(n) {
   const num = parseFloat(n)

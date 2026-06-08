@@ -43,6 +43,7 @@ export function getResultBadgeClass(result) {
 
 export function getStatusColor(status) {
   const map = {
+    'แจ้งเข้ามา': 'text-purple-400',
     'ยังไม่ติดต่อ': 'text-gray-400',
     'ติดต่อแล้ว': 'text-blue-400',
     'รอ Insight': 'text-yellow-400',

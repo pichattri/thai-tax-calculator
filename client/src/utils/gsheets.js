@@ -39,7 +39,8 @@ const HEADERS = [
   'followers','feeSet','feeAgreed','contact','tags','month',
   'note','status','saveRate','commentQuality','engagementRate',
   'audienceAge','audienceFemale','contentRelevance','trustSignal',
-  'kqsScore','kqsResult','createdAt','updatedAt','statusUpdatedAt'
+  'kqsScore','kqsResult','createdAt','updatedAt','statusUpdatedAt',
+  'ageGroup'
 ]
 
 // ---- JWT helpers ----
