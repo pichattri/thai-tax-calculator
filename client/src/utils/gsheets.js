@@ -40,7 +40,9 @@ const HEADERS = [
   'note','status','saveRate','commentQuality','engagementRate',
   'audienceAge','audienceFemale','contentRelevance','trustSignal',
   'kqsScore','kqsResult','createdAt','updatedAt','statusUpdatedAt',
-  'ageGroup','requester','igLink','fbLink','tiktokLink','lemon8Link'
+  'ageGroup','requester','igLink','fbLink','tiktokLink','lemon8Link',
+  'igAccount','fbAccount','tiktokAccount','lemon8Account',
+  'igFollowers','fbFollowers','tiktokFollowers','lemon8Followers'
 ]
 
 // ---- JWT helpers ----
