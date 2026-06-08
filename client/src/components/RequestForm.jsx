@@ -15,13 +15,12 @@ const CATEGORIES = [
 ]
 
 const AGE_GROUPS = [
-  { value: '<28', label: '< 28 ปี' },
-  { value: '29-35', label: '29 – 35 ปี' },
-  { value: '36-80', label: '36 ปีขึ้นไป' },
+  { value: '<28', label: '< 28' },
+  { value: '29-35', label: '29–35' },
+  { value: '36-80', label: '36+' },
 ]
 
-const EMPTY_SOCIALS = { instagram: '', facebook: '', tiktok: '', lemon8: '' }
-const EMPTY_FOLLOWERS = { instagram: '', facebook: '', tiktok: '', lemon8: '' }
+const EMPTY = { instagram: '', facebook: '', tiktok: '', lemon8: '' }
 
 function RadioGroup({ options, value, onChange }) {
   return (
@@ -42,23 +41,24 @@ function RadioGroup({ options, value, onChange }) {
 
 export default function RequestForm() {
   const [caseName, setCaseName] = useState('')
-  const [socials, setSocials] = useState({ ...EMPTY_SOCIALS })
-  const [followers, setFollowers] = useState({ ...EMPTY_FOLLOWERS })
+  const [socials, setSocials] = useState({ ...EMPTY })
+  const [followers, setFollowers] = useState({ ...EMPTY })
+  const [ageGroups, setAgeGroups] = useState({ ...EMPTY })
   const [category, setCategory] = useState('')
-  const [ageGroup, setAgeGroup] = useState('')
   const [saving, setSaving] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState(null)
 
   const setSocial = (id, val) => setSocials(p => ({ ...p, [id]: val }))
   const setFollower = (id, val) => setFollowers(p => ({ ...p, [id]: val }))
+  const setAge = (id, val) => setAgeGroups(p => ({ ...p, [id]: val }))
 
   const hasSocial = Object.values(socials).some(v => v.trim())
-  const valid = caseName.trim() && hasSocial && category && ageGroup
+  const valid = caseName.trim() && hasSocial && category
 
   const reset = () => {
-    setCaseName(''); setSocials({ ...EMPTY_SOCIALS })
-    setFollowers({ ...EMPTY_FOLLOWERS }); setCategory(''); setAgeGroup('')
+    setCaseName(''); setSocials({ ...EMPTY }); setFollowers({ ...EMPTY })
+    setAgeGroups({ ...EMPTY }); setCategory('')
   }
 
   const handleSubmit = async (e) => {
@@ -66,13 +66,17 @@ export default function RequestForm() {
     if (!valid) return
     setSaving(true); setError(null)
     try {
-      // Build platform list and contact string from filled socials
       const filledPlatforms = PLATFORMS.filter(p => socials[p.id].trim())
       const platformStr = filledPlatforms.map(p => p.label).join(', ')
-      const contactStr = filledPlatforms
-        .map(p => `${p.label}: ${socials[p.id]}${followers[p.id] ? ` (${Number(followers[p.id]).toLocaleString()} followers)` : ''}`)
-        .join(' | ')
+      const contactStr = filledPlatforms.map(p => {
+        let s = `${p.label}: ${socials[p.id]}`
+        if (followers[p.id]) s += ` (${Number(followers[p.id]).toLocaleString()} followers`
+        if (ageGroups[p.id]) s += `, age ${ageGroups[p.id]}`
+        if (followers[p.id] || ageGroups[p.id]) s += ')'
+        return s
+      }).join(' | ')
       const totalFollowers = filledPlatforms.reduce((sum, p) => sum + (parseInt(followers[p.id]) || 0), 0)
+      const ageGroupStr = filledPlatforms.filter(p => ageGroups[p.id]).map(p => `${p.label}:${ageGroups[p.id]}`).join(', ')
 
       await createKOL({
         name: caseName.trim(),
@@ -80,7 +84,7 @@ export default function RequestForm() {
         followers: totalFollowers || '',
         contact: contactStr,
         category,
-        ageGroup,
+        ageGroup: ageGroupStr,
         status: 'แจ้งเข้ามา',
         type: 'Micro',
       })
@@ -126,7 +130,7 @@ export default function RequestForm() {
           />
         </div>
 
-        {/* Social Media — ทุกช่องทาง */}
+        {/* Social Media ทุกช่องทาง */}
         <div>
           <label className="kol-label mb-2">
             ช่องทาง Social Media
@@ -135,11 +139,11 @@ export default function RequestForm() {
           <div className="space-y-3">
             {PLATFORMS.map(p => (
               <div key={p.id} className="bg-navy rounded-xl p-3 border border-gray-800">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-base">{p.icon}</span>
+                <div className="flex items-center gap-2 mb-3">
+                  <span>{p.icon}</span>
                   <span className="text-sm font-medium text-gray-300">{p.label}</span>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2 mb-3">
                   <input
                     value={socials[p.id]}
                     onChange={e => setSocial(p.id, e.target.value)}
@@ -154,24 +158,34 @@ export default function RequestForm() {
                     placeholder="จำนวน followers"
                   />
                 </div>
+                {/* Age group per platform */}
+                <div>
+                  <p className="text-xs text-gray-500 mb-1.5">กลุ่มอายุผู้ติดตาม</p>
+                  <div className="flex gap-2">
+                    {AGE_GROUPS.map(a => (
+                      <button
+                        key={a.value} type="button"
+                        onClick={() => setAge(p.id, ageGroups[p.id] === a.value ? '' : a.value)}
+                        className={`flex-1 py-1.5 rounded-lg text-xs border transition-all ${
+                          ageGroups[p.id] === a.value
+                            ? 'bg-accent border-accent text-white font-medium'
+                            : 'border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-300'
+                        }`}
+                      >
+                        {a.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-          {!hasSocial && (
-            <p className="text-xs text-gray-600 mt-1">กรุณากรอกอย่างน้อย 1 ช่องทาง</p>
-          )}
         </div>
 
         {/* หมวดหมู่ */}
         <div>
           <label className="kol-label">หมวดหมู่ *</label>
           <RadioGroup options={CATEGORIES} value={category} onChange={setCategory} />
-        </div>
-
-        {/* Age Group */}
-        <div>
-          <label className="kol-label">กลุ่มอายุ Audience *</label>
-          <RadioGroup options={AGE_GROUPS} value={ageGroup} onChange={setAgeGroup} />
         </div>
 
         {error && (
