@@ -24,7 +24,7 @@ export default function KOLList({ kols, onEdit, onDelete, onStatusChange }) {
   const filtered = kols
     .filter(k => {
       if (search && !k.name?.toLowerCase().includes(search.toLowerCase())) return false
-      if (filterPlatform !== 'ทั้งหมด' && k.platform !== filterPlatform) return false
+      if (filterPlatform !== 'ทั้งหมด' && !k.platform?.includes(filterPlatform)) return false
       if (filterStatus !== 'ทั้งหมด' && k.status !== filterStatus) return false
       return true
     })
@@ -45,7 +45,7 @@ export default function KOLList({ kols, onEdit, onDelete, onStatusChange }) {
           className="kol-input w-44 text-xs"
         />
         <select value={filterPlatform} onChange={e => setFilterPlatform(e.target.value)} className="kol-select w-32 text-xs">
-          {['ทั้งหมด', 'IG', 'TikTok', 'YouTube'].map(p => <option key={p}>{p}</option>)}
+          {['ทั้งหมด', 'Instagram', 'Facebook', 'TikTok', 'Lemon8', 'YouTube'].map(p => <option key={p}>{p}</option>)}
         </select>
         <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="kol-select w-36 text-xs">
           <option>ทั้งหมด</option>

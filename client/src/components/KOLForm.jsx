@@ -142,7 +142,7 @@ export default function KOLForm({ initial, onSave, onCancel }) {
           <div>
             <label className="kol-label">Platform</label>
             <select value={form.platform} onChange={e => set('platform', e.target.value)} className="kol-select">
-              {['Instagram', 'Facebook', 'TikTok', 'Lemon8', 'YouTube', 'IG'].map(p => <option key={p}>{p}</option>)}
+              {['Instagram', 'Facebook', 'TikTok', 'Lemon8', 'YouTube'].map(p => <option key={p}>{p}</option>)}
             </select>
           </div>
           <div>
