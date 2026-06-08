@@ -40,7 +40,7 @@ const HEADERS = [
   'note','status','saveRate','commentQuality','engagementRate',
   'audienceAge','audienceFemale','contentRelevance','trustSignal',
   'kqsScore','kqsResult','createdAt','updatedAt','statusUpdatedAt',
-  'ageGroup','requester'
+  'ageGroup','requester','igLink','fbLink','tiktokLink','lemon8Link'
 ]
 
 // ---- JWT helpers ----
@@ -99,7 +99,7 @@ async function sheetsGet(range) {
 
 async function sheetsUpdate(range, values) {
   const token = await getAccessToken()
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=USER_ENTERED`
   const res = await fetch(url, {
     method: 'PUT',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -111,7 +111,7 @@ async function sheetsUpdate(range, values) {
 
 async function sheetsAppend(values) {
   const token = await getAccessToken()
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(SHEET_NAME + '!A:Z')}:append?valueInputOption=RAW`
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(SHEET_NAME + '!A:Z')}:append?valueInputOption=USER_ENTERED`
   const res = await fetch(url, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },

@@ -1,6 +1,21 @@
 import { useState } from 'react'
 import { createKOL } from '../api'
 
+const PLATFORM_URLS = {
+  instagram: u => `https://instagram.com/${u}`,
+  facebook: u => `https://facebook.com/${u}`,
+  tiktok: u => `https://tiktok.com/@${u}`,
+  lemon8: u => `https://www.lemon8-app.com/@${u}`,
+}
+
+function buildHyperlink(platformId, raw) {
+  const val = raw.trim()
+  if (!val) return ''
+  const url = val.startsWith('http') ? val : PLATFORM_URLS[platformId](val.replace(/^@/, ''))
+  const label = val.startsWith('http') ? val : (val.startsWith('@') ? val : `@${val}`)
+  return `=HYPERLINK("${url}","${label}")`
+}
+
 const PLATFORMS = [
   { id: 'instagram', label: 'Instagram', icon: '📸' },
   { id: 'facebook', label: 'Facebook', icon: '👤' },
@@ -87,6 +102,10 @@ export default function RequestForm() {
         category,
         ageGroup: ageGroupStr,
         requester: requester.trim(),
+        igLink: buildHyperlink('instagram', socials.instagram),
+        fbLink: buildHyperlink('facebook', socials.facebook),
+        tiktokLink: buildHyperlink('tiktok', socials.tiktok),
+        lemon8Link: buildHyperlink('lemon8', socials.lemon8),
         status: 'แจ้งเข้ามา',
         type: 'Micro',
       })
