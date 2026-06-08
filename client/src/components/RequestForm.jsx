@@ -26,7 +26,7 @@ function RadioGroup({ options, value, onChange }) {
   return (
     <div className="space-y-2 mt-1">
       {options.map(o => (
-        <label key={o.value} className="flex items-center gap-3 cursor-pointer group">
+        <label key={o.value} className="flex items-center gap-3 cursor-pointer group" onClick={() => onChange(o.value)}>
           <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
             value === o.value ? 'border-accent bg-accent' : 'border-gray-600 group-hover:border-gray-400'
           }`}>
