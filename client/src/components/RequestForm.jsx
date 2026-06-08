@@ -40,6 +40,7 @@ function RadioGroup({ options, value, onChange }) {
 }
 
 export default function RequestForm() {
+  const [requester, setRequester] = useState('')
   const [caseName, setCaseName] = useState('')
   const [socials, setSocials] = useState({ ...EMPTY })
   const [followers, setFollowers] = useState({ ...EMPTY })
@@ -54,10 +55,10 @@ export default function RequestForm() {
   const setAge = (id, val) => setAgeGroups(p => ({ ...p, [id]: val }))
 
   const hasSocial = Object.values(socials).some(v => v.trim())
-  const valid = caseName.trim() && hasSocial && category
+  const valid = requester.trim() && caseName.trim() && hasSocial && category
 
   const reset = () => {
-    setCaseName(''); setSocials({ ...EMPTY }); setFollowers({ ...EMPTY })
+    setRequester(''); setCaseName(''); setSocials({ ...EMPTY }); setFollowers({ ...EMPTY })
     setAgeGroups({ ...EMPTY }); setCategory('')
   }
 
@@ -85,6 +86,7 @@ export default function RequestForm() {
         contact: contactStr,
         category,
         ageGroup: ageGroupStr,
+        tags: requester.trim(),
         status: 'แจ้งเข้ามา',
         type: 'Micro',
       })
@@ -117,6 +119,18 @@ export default function RequestForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="kol-card space-y-6">
+
+        {/* ชื่อผู้ขอ */}
+        <div>
+          <label className="kol-label">ชื่อผู้ขอ *</label>
+          <input
+            value={requester}
+            onChange={e => setRequester(e.target.value)}
+            className="kol-input"
+            placeholder="เช่น คุณนิค ทีม Marketing"
+            required
+          />
+        </div>
 
         {/* ชื่อเคส */}
         <div>
