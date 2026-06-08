@@ -40,7 +40,7 @@ const HEADERS = [
   'note','status','saveRate','commentQuality','engagementRate',
   'audienceAge','audienceFemale','contentRelevance','trustSignal',
   'kqsScore','kqsResult','createdAt','updatedAt','statusUpdatedAt',
-  'ageGroup'
+  'ageGroup','requester'
 ]
 
 // ---- JWT helpers ----

@@ -121,6 +121,16 @@ export default function KOLForm({ initial, onSave, onCancel }) {
         <button type="button" onClick={onCancel} className="text-gray-400 hover:text-white text-2xl leading-none">×</button>
       </div>
 
+      {/* Request origin banner */}
+      {initial?.requester && (
+        <div className="bg-accent bg-opacity-10 border border-accent border-opacity-40 rounded-xl px-4 py-3 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+          <span className="text-gray-400">ผู้ขอ: <span className="text-white font-medium">{initial.requester}</span></span>
+          {initial.ageGroup && (
+            <span className="text-gray-400">กลุ่มอายุ: <span className="text-white font-medium">{initial.ageGroup}</span></span>
+          )}
+        </div>
+      )}
+
       {/* Basic Info */}
       <div>
         <h3 className="font-heading text-sm font-medium text-accent mb-3 uppercase tracking-wide">ข้อมูลพื้นฐาน</h3>
@@ -132,7 +142,7 @@ export default function KOLForm({ initial, onSave, onCancel }) {
           <div>
             <label className="kol-label">Platform</label>
             <select value={form.platform} onChange={e => set('platform', e.target.value)} className="kol-select">
-              {['IG', 'TikTok', 'YouTube'].map(p => <option key={p}>{p}</option>)}
+              {['Instagram', 'Facebook', 'TikTok', 'Lemon8', 'YouTube', 'IG'].map(p => <option key={p}>{p}</option>)}
             </select>
           </div>
           <div>

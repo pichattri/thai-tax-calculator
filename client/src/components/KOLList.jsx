@@ -66,6 +66,7 @@ export default function KOLList({ kols, onEdit, onDelete, onStatusChange }) {
             <thead>
               <tr className="text-gray-400 text-xs border-b border-gray-700">
                 <th className="text-left py-2 pr-3">ชื่อ</th>
+                <th className="text-left pr-3">ผู้ขอ</th>
                 <th className="text-left pr-3">Platform</th>
                 <th className="text-left pr-3">ประเภท</th>
                 <th className="text-left pr-3">หมวดหมู่</th>
@@ -87,6 +88,11 @@ export default function KOLList({ kols, onEdit, onDelete, onStatusChange }) {
                   onClick={() => onEdit(k)}
                 >
                   <td className="py-2 pr-3 text-white font-medium max-w-[140px] truncate">{k.name}</td>
+                  <td className="pr-3 text-xs max-w-[100px] truncate">
+                    {k.requester
+                      ? <span className="text-accent font-medium">{k.requester}</span>
+                      : <span className="text-gray-600">—</span>}
+                  </td>
                   <td className="pr-3 text-gray-300">{k.platform}</td>
                   <td className="pr-3 text-gray-300">{k.type}</td>
                   <td className="pr-3 text-gray-400 text-xs max-w-[120px] truncate">{k.category}</td>

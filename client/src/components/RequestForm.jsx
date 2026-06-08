@@ -86,7 +86,7 @@ export default function RequestForm() {
         contact: contactStr,
         category,
         ageGroup: ageGroupStr,
-        tags: requester.trim(),
+        requester: requester.trim(),
         status: 'แจ้งเข้ามา',
         type: 'Micro',
       })

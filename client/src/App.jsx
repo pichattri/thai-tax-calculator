@@ -51,7 +51,7 @@ export default function App() {
   }
 
   const TABS = [
-    { id: 'request', label: '📋 แจ้ง KOL' },
+    { id: 'request', label: '📋 Request CaseReview' },
     { id: 'pr', label: 'ทีม PR' },
     { id: 'planning', label: 'Planning' },
   ]
