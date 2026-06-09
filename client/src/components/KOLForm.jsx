@@ -65,8 +65,49 @@ function ScoreField({ label, field, form, onChange, tooltip }) {
   )
 }
 
+function initForm(initial) {
+  const base = { ...EMPTY, ...initial }
+
+  // Try to fill account fields from igLink etc. (FORMATTED_VALUE returns @username)
+  const linkToAccount = [
+    { account: 'igAccount',     followers: 'igFollowers',     link: 'igLink' },
+    { account: 'fbAccount',     followers: 'fbFollowers',     link: 'fbLink' },
+    { account: 'tiktokAccount', followers: 'tiktokFollowers', link: 'tiktokLink' },
+    { account: 'lemon8Account', followers: 'lemon8Followers', link: 'lemon8Link' },
+  ]
+  for (const m of linkToAccount) {
+    if (!base[m.account] && base[m.link] && !base[m.link].startsWith('=')) {
+      base[m.account] = base[m.link]
+    }
+  }
+
+  // If still empty, parse the contact string
+  // Format: "Instagram: @user (50,000 followers) | TikTok: https://..."
+  const anyFilled = linkToAccount.some(m => base[m.account])
+  if (!anyFilled && base.contact) {
+    const platformMap = {
+      Instagram: { account: 'igAccount', followers: 'igFollowers' },
+      Facebook:  { account: 'fbAccount', followers: 'fbFollowers' },
+      TikTok:    { account: 'tiktokAccount', followers: 'tiktokFollowers' },
+      Lemon8:    { account: 'lemon8Account', followers: 'lemon8Followers' },
+    }
+    for (const part of base.contact.split(' | ')) {
+      const m = part.match(/^(Instagram|Facebook|TikTok|Lemon8):\s*(\S+)(?:\s*\(([\d,]+)\s*followers)?/)
+      if (m) {
+        const fields = platformMap[m[1]]
+        if (fields) {
+          if (!base[fields.account]) base[fields.account] = m[2]
+          if (!base[fields.followers] && m[3]) base[fields.followers] = m[3].replace(/,/g, '')
+        }
+      }
+    }
+  }
+
+  return base
+}
+
 export default function KOLForm({ initial, onSave, onCancel }) {
-  const [form, setForm] = useState(initial ? { ...EMPTY, ...initial } : { ...EMPTY })
+  const [form, setForm] = useState(initial ? initForm(initial) : { ...EMPTY })
   const [saving, setSaving] = useState(false)
   const [kqs, setKqs] = useState(null)
 
