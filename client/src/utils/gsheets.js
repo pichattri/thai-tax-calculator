@@ -41,6 +41,7 @@ const HEADERS = [
   'audienceAge','audienceFemale','contentRelevance','trustSignal',
   'kqsScore','kqsResult','createdAt','updatedAt','statusUpdatedAt',
   'ageGroup','requester','igLink','fbLink','tiktokLink','lemon8Link',
+  'contactDate','confirmDate','appointmentStatus',
   'igAccount','fbAccount','tiktokAccount','lemon8Account',
   'igFollowers','fbFollowers','tiktokFollowers','lemon8Followers'
 ]

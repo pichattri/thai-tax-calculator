@@ -9,17 +9,19 @@ const PLATFORM_DEFS = [
 ]
 
 const EMPTY = {
-  name: '', type: 'Micro', category: 'คนสวยอยากสวยตาม',
+  name: '', type: 'Tier1', category: 'คนสวยอยากสวยตาม',
   conditions: '', feeSet: '', feeAgreed: '',
-  tags: [], month: '', note: '', status: 'ยังไม่ติดต่อ',
+  month: '', note: '', status: 'แจ้งเข้ามา',
+  contactDate: '', confirmDate: '', appointmentStatus: '',
   saveRate: '', commentQuality: '', engagementRate: '',
   audienceAge: '', audienceFemale: '', contentRelevance: '', trustSignal: '',
   igAccount: '', fbAccount: '', tiktokAccount: '', lemon8Account: '',
   igFollowers: '', fbFollowers: '', tiktokFollowers: '', lemon8Followers: '',
 }
 
-const TAG_OPTIONS = ['Filler', 'Botox', 'Skincare', 'Slimming', 'Hair', 'Other']
-const STATUS_OPTIONS = ['ยังไม่ติดต่อ', 'ติดต่อแล้ว', 'รอ Insight', 'ตกลงแล้ว', 'ปฏิเสธ']
+const TYPE_OPTIONS = ['Tier1', 'Tier2', 'Tier3', 'KOC']
+const STATUS_OPTIONS = ['แจ้งเข้ามา', 'กำลังติดต่อ', 'รอ Insight', 'ปฏิเสธ', 'ตกลงแล้ว', 'ไม่ผ่านเกณฑ์พิจารณา']
+const APPOINTMENT_OPTIONS = ['', 'รอ Approve หัตถการ', 'Approve หัตถการแล้ว', 'ลงนัดหมายวันแล้ว']
 const CATEGORY_OPTIONS = ['คนสวยอยากสวยตาม', 'คนดังไวรัล', 'Before-After']
 
 const TOOLTIPS = {
@@ -81,17 +83,6 @@ export default function KOLForm({ initial, onSave, onCancel }) {
 
   const set = (field, val) => setForm(p => ({ ...p, [field]: val }))
 
-  const toggleTag = (tag) => {
-    const arr = Array.isArray(form.tags) ? form.tags : (form.tags ? form.tags.split(',').filter(Boolean) : [])
-    const next = arr.includes(tag) ? arr.filter(t => t !== tag) : [...arr, tag]
-    setForm(p => ({ ...p, tags: next }))
-  }
-
-  const getTagsArray = () => {
-    if (Array.isArray(form.tags)) return form.tags
-    return form.tags ? form.tags.split(',').filter(Boolean) : []
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.name || !form.category) {
@@ -117,7 +108,6 @@ export default function KOLForm({ initial, onSave, onCancel }) {
         platform: platform || form.platform || '',
         followers: totalFollowers || form.followers || '',
         contact,
-        tags: getTagsArray().join(','),
         kqsScore: kqs ? kqs.kqs : '',
         kqsResult: kqs ? kqs.result : '',
         ...links,
@@ -170,7 +160,7 @@ export default function KOLForm({ initial, onSave, onCancel }) {
           <div>
             <label className="kol-label">ประเภท</label>
             <select value={form.type} onChange={e => set('type', e.target.value)} className="kol-select">
-              {['Nano', 'Micro', 'Macro', 'Mega'].map(t => <option key={t}>{t}</option>)}
+              {TYPE_OPTIONS.map(t => <option key={t}>{t}</option>)}
             </select>
           </div>
         </div>
@@ -208,14 +198,24 @@ export default function KOLForm({ initial, onSave, onCancel }) {
         <h3 className="font-heading text-sm font-medium text-accent mb-3 uppercase tracking-wide">ข้อมูล PR</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="kol-label">สถานะ</label>
+            <label className="kol-label">สถานะติดต่อ</label>
             <select value={form.status} onChange={e => set('status', e.target.value)} className="kol-select">
               {STATUS_OPTIONS.map(s => <option key={s}>{s}</option>)}
             </select>
           </div>
           <div>
-            <label className="kol-label">เดือนที่ประเมิน</label>
-            <input type="month" value={form.month} onChange={e => set('month', e.target.value)} className="kol-input" />
+            <label className="kol-label">สถานะการนัด</label>
+            <select value={form.appointmentStatus || ''} onChange={e => set('appointmentStatus', e.target.value)} className="kol-select">
+              {APPOINTMENT_OPTIONS.map(s => <option key={s} value={s}>{s || '—'}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="kol-label">วันที่ติดต่อ</label>
+            <input type="date" value={form.contactDate || ''} onChange={e => set('contactDate', e.target.value)} className="kol-input" />
+          </div>
+          <div>
+            <label className="kol-label">วันที่คอนเฟิร์ม</label>
+            <input type="date" value={form.confirmDate || ''} onChange={e => set('confirmDate', e.target.value)} className="kol-input" />
           </div>
           <div>
             <label className="kol-label">ค่าตัวที่ตั้งไว้ (THB)</label>
@@ -225,23 +225,13 @@ export default function KOLForm({ initial, onSave, onCancel }) {
             <label className="kol-label">ค่าตัวที่ตกลงจริง (THB)</label>
             <input type="number" value={form.feeAgreed} onChange={e => set('feeAgreed', e.target.value)} className="kol-input" />
           </div>
+          <div>
+            <label className="kol-label">เดือนที่ประเมิน</label>
+            <input type="month" value={form.month} onChange={e => set('month', e.target.value)} className="kol-input" />
+          </div>
           <div className="sm:col-span-2">
             <label className="kol-label">เงื่อนไขการนำมาใช้</label>
             <textarea value={form.conditions} onChange={e => set('conditions', e.target.value)} className="kol-input h-20 resize-none" placeholder="เช่น ต้องโพสต์ใน 7 วัน, ห้ามโปรโมตคู่แข่ง" />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="kol-label">Tag</label>
-            <div className="flex flex-wrap gap-2 mt-1">
-              {TAG_OPTIONS.map(tag => {
-                const active = getTagsArray().includes(tag)
-                return (
-                  <button key={tag} type="button" onClick={() => toggleTag(tag)}
-                    className={`px-3 py-1 rounded-full text-xs border transition-all ${active ? 'bg-accent border-accent text-white' : 'border-gray-600 text-gray-400 hover:border-gray-400'}`}>
-                    {tag}
-                  </button>
-                )
-              })}
-            </div>
           </div>
           <div className="sm:col-span-2">
             <label className="kol-label">หมายเหตุ</label>
