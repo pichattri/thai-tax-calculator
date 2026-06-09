@@ -38,7 +38,8 @@ function buildHyperlink(buildUrl, raw) {
   const val = raw?.trim()
   if (!val) return ''
   const url = val.startsWith('http') ? val : buildUrl(val.replace(/^@/, ''))
-  const label = val.startsWith('http') ? val : (val.startsWith('@') ? val : `@${val}`)
+  const atMatch = val.startsWith('http') ? val.match(/@([^/?&#]+)/) : null
+  const label = atMatch ? `@${atMatch[1]}` : (val.startsWith('@') ? val : `@${val}`)
   return `=HYPERLINK("${url}","${label}")`
 }
 
