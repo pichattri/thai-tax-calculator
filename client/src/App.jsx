@@ -4,8 +4,56 @@ import PRView from './components/PRView'
 import PlanningView from './components/PlanningView'
 import RequestForm from './components/RequestForm'
 
+const PASSWORDS = { pr: 'PRteam', planning: 'Planning' }
+const SESSION_KEY = 'mc_auth'
+
+function getAuth() {
+  try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}') } catch { return {} }
+}
+function setAuth(view) {
+  const a = getAuth(); a[view] = true
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(a))
+}
+
+function PasswordModal({ viewLabel, onSuccess, onCancel }) {
+  const [input, setInput] = useState('')
+  const [wrong, setWrong] = useState(false)
+
+  const submit = (e) => {
+    e.preventDefault()
+    if (onSuccess(input)) { setWrong(false) }
+    else { setWrong(true); setInput('') }
+  }
+
+  return (
+    <div className="modal-overlay">
+      <div className="bg-navy-light rounded-2xl p-8 max-w-sm w-full border border-gray-700 shadow-2xl">
+        <div className="w-12 h-12 bg-accent bg-opacity-20 rounded-xl flex items-center justify-center mx-auto mb-4">
+          <span className="text-2xl">🔒</span>
+        </div>
+        <h2 className="font-heading text-xl font-bold text-white text-center mb-1">{viewLabel}</h2>
+        <p className="text-gray-400 text-sm text-center mb-6">กรอกรหัสผ่านเพื่อเข้าใช้งาน</p>
+        <form onSubmit={submit} className="space-y-3">
+          <input
+            autoFocus
+            type="password"
+            value={input}
+            onChange={e => { setInput(e.target.value); setWrong(false) }}
+            className={`kol-input text-center text-lg tracking-widest ${wrong ? 'border-red-500' : ''}`}
+            placeholder="••••••••"
+          />
+          {wrong && <p className="text-red-400 text-xs text-center">รหัสผ่านไม่ถูกต้อง</p>}
+          <button type="submit" className="btn-accent w-full py-2.5">เข้าสู่ระบบ</button>
+          <button type="button" onClick={onCancel} className="btn-ghost w-full py-2">ยกเลิก</button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const [view, setView] = useState('request')
+  const [pendingView, setPendingView] = useState(null)
   const [kols, setKols] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -33,6 +81,22 @@ export default function App() {
     return () => clearInterval(timer)
   }, [view, loadKOLs])
 
+  const handleTabClick = (tabId) => {
+    if (tabId === 'request') { setView('request'); return }
+    if (getAuth()[tabId]) { setView(tabId); return }
+    setPendingView(tabId)
+  }
+
+  const handlePasswordSuccess = (input) => {
+    if (input === PASSWORDS[pendingView]) {
+      setAuth(pendingView)
+      setView(pendingView)
+      setPendingView(null)
+      return true
+    }
+    return false
+  }
+
   const handleCreate = async (data) => {
     const created = await createKOL(data)
     setKols(prev => [...prev, created])
@@ -58,7 +122,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-navy">
-      {/* Nav */}
       <nav className="bg-navy-light border-b border-gray-800 sticky top-0 z-40">
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -73,7 +136,7 @@ export default function App() {
             {TABS.map(t => (
               <button
                 key={t.id}
-                onClick={() => setView(t.id)}
+                onClick={() => handleTabClick(t.id)}
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                   view === t.id
                     ? 'bg-accent text-white shadow'
@@ -122,6 +185,14 @@ export default function App() {
           />
         )}
       </main>
+
+      {pendingView && (
+        <PasswordModal
+          viewLabel={pendingView === 'pr' ? 'ทีม PR' : 'Planning'}
+          onSuccess={handlePasswordSuccess}
+          onCancel={() => setPendingView(null)}
+        />
+      )}
     </div>
   )
 }
