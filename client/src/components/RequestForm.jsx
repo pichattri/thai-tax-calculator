@@ -30,12 +30,6 @@ const CATEGORIES = [
   { value: 'Before-After', label: '3. Before-After' },
 ]
 
-const AGE_GROUPS = [
-  { value: '<28', label: '< 28' },
-  { value: '29-35', label: '29–35' },
-  { value: '36-80', label: '36+' },
-]
-
 const EMPTY = { instagram: '', facebook: '', tiktok: '', lemon8: '' }
 
 function RadioGroup({ options, value, onChange }) {
@@ -60,22 +54,21 @@ export default function RequestForm() {
   const [caseName, setCaseName] = useState('')
   const [socials, setSocials] = useState({ ...EMPTY })
   const [followers, setFollowers] = useState({ ...EMPTY })
-  const [ageGroups, setAgeGroups] = useState({ ...EMPTY })
   const [category, setCategory] = useState('')
+  const [purpose, setPurpose] = useState('')
   const [saving, setSaving] = useState(false)
   const [done, setDone] = useState(false)
   const [error, setError] = useState(null)
 
   const setSocial = (id, val) => setSocials(p => ({ ...p, [id]: val }))
   const setFollower = (id, val) => setFollowers(p => ({ ...p, [id]: val }))
-  const setAge = (id, val) => setAgeGroups(p => ({ ...p, [id]: val }))
 
   const hasSocial = Object.values(socials).some(v => v.trim())
   const valid = requester.trim() && caseName.trim() && hasSocial && category
 
   const reset = () => {
-    setRequester(''); setCaseName(''); setSocials({ ...EMPTY }); setFollowers({ ...EMPTY })
-    setAgeGroups({ ...EMPTY }); setCategory('')
+    setRequester(''); setCaseName(''); setSocials({ ...EMPTY })
+    setFollowers({ ...EMPTY }); setCategory(''); setPurpose('')
   }
 
   const handleSubmit = async (e) => {
@@ -87,13 +80,10 @@ export default function RequestForm() {
       const platformStr = filledPlatforms.map(p => p.label).join(', ')
       const contactStr = filledPlatforms.map(p => {
         let s = `${p.label}: ${socials[p.id]}`
-        if (followers[p.id]) s += ` (${Number(followers[p.id]).toLocaleString()} followers`
-        if (ageGroups[p.id]) s += `, age ${ageGroups[p.id]}`
-        if (followers[p.id] || ageGroups[p.id]) s += ')'
+        if (followers[p.id]) s += ` (${Number(followers[p.id]).toLocaleString()} followers)`
         return s
       }).join(' | ')
       const totalFollowers = filledPlatforms.reduce((sum, p) => sum + (parseInt(followers[p.id]) || 0), 0)
-      const ageGroupStr = filledPlatforms.filter(p => ageGroups[p.id]).map(p => `${p.label}:${ageGroups[p.id]}`).join(', ')
 
       await createKOL({
         name: caseName.trim(),
@@ -101,7 +91,7 @@ export default function RequestForm() {
         followers: totalFollowers || '',
         contact: contactStr,
         category,
-        ageGroup: ageGroupStr,
+        purpose: purpose.trim(),
         requester: requester.trim(),
         igAccount: socials.instagram,
         fbAccount: socials.facebook,
@@ -116,7 +106,7 @@ export default function RequestForm() {
         tiktokLink: buildHyperlink('tiktok', socials.tiktok),
         lemon8Link: buildHyperlink('lemon8', socials.lemon8),
         status: 'แจ้งเข้ามา',
-        type: 'Micro',
+        type: 'Tier1',
       })
       setDone(true)
     } catch (err) {
@@ -142,7 +132,7 @@ export default function RequestForm() {
   return (
     <div className="max-w-lg mx-auto py-8">
       <div className="text-center mb-8">
-        <h1 className="font-heading text-2xl font-bold text-white mb-1">แจ้งรายชื่อ KOL</h1>
+        <h1 className="font-heading text-2xl font-bold text-white mb-1">Request CaseReview</h1>
         <p className="text-gray-400 text-sm">กรอกข้อมูลเพื่อให้ทีม PR ติดต่อ KOL ให้</p>
       </div>
 
@@ -172,7 +162,7 @@ export default function RequestForm() {
           />
         </div>
 
-        {/* Social Media ทุกช่องทาง */}
+        {/* Social Media */}
         <div>
           <label className="kol-label mb-2">
             ช่องทาง Social Media
@@ -181,11 +171,11 @@ export default function RequestForm() {
           <div className="space-y-3">
             {PLATFORMS.map(p => (
               <div key={p.id} className="bg-navy rounded-xl p-3 border border-gray-800">
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 mb-2">
                   <span>{p.icon}</span>
                   <span className="text-sm font-medium text-gray-300">{p.label}</span>
                 </div>
-                <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="grid grid-cols-2 gap-2">
                   <input
                     value={socials[p.id]}
                     onChange={e => setSocial(p.id, e.target.value)}
@@ -200,25 +190,6 @@ export default function RequestForm() {
                     placeholder="จำนวน followers"
                   />
                 </div>
-                {/* Age group per platform */}
-                <div>
-                  <p className="text-xs text-gray-500 mb-1.5">กลุ่มอายุผู้ติดตาม</p>
-                  <div className="flex gap-2">
-                    {AGE_GROUPS.map(a => (
-                      <button
-                        key={a.value} type="button"
-                        onClick={() => setAge(p.id, ageGroups[p.id] === a.value ? '' : a.value)}
-                        className={`flex-1 py-1.5 rounded-lg text-xs border transition-all ${
-                          ageGroups[p.id] === a.value
-                            ? 'bg-accent border-accent text-white font-medium'
-                            : 'border-gray-700 text-gray-500 hover:border-gray-500 hover:text-gray-300'
-                        }`}
-                      >
-                        {a.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
               </div>
             ))}
           </div>
@@ -228,6 +199,17 @@ export default function RequestForm() {
         <div>
           <label className="kol-label">หมวดหมู่ *</label>
           <RadioGroup options={CATEGORIES} value={category} onChange={setCategory} />
+        </div>
+
+        {/* จุดประสงค์ */}
+        <div>
+          <label className="kol-label">จุดประสงค์ในการขอเคส</label>
+          <textarea
+            value={purpose}
+            onChange={e => setPurpose(e.target.value)}
+            className="kol-input h-24 resize-none"
+            placeholder="เช่น โปรโมทแคมเปญ Filler ช่วง Q3, ต้องการ KOL สายความงามที่มีฐานแฟน 25-35 ปี"
+          />
         </div>
 
         {error && (

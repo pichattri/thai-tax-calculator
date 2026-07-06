@@ -174,13 +174,13 @@ export default function KOLForm({ initial, onSave, onCancel }) {
       </div>
 
       {/* Request origin banner */}
-      {(form.requester || form.ageGroup) && (
+      {(form.requester || form.purpose) && (
         <div className="bg-accent bg-opacity-10 border border-accent border-opacity-40 rounded-xl px-4 py-3 space-y-1 text-sm">
           {form.requester && (
             <div className="text-gray-400">ผู้ขอ: <span className="text-white font-medium">{form.requester}</span></div>
           )}
-          {form.ageGroup && (
-            <div className="text-gray-400">กลุ่มอายุผู้ติดตาม: <span className="text-white font-medium">{form.ageGroup}</span></div>
+          {form.purpose && (
+            <div className="text-gray-400">จุดประสงค์: <span className="text-white">{form.purpose}</span></div>
           )}
         </div>
       )}

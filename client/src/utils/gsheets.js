@@ -43,7 +43,8 @@ const HEADERS = [
   'ageGroup','requester','igLink','fbLink','tiktokLink','lemon8Link',
   'contactDate','confirmDate','appointmentStatus',
   'igAccount','fbAccount','tiktokAccount','lemon8Account',
-  'igFollowers','fbFollowers','tiktokFollowers','lemon8Followers'
+  'igFollowers','fbFollowers','tiktokFollowers','lemon8Followers',
+  'purpose'
 ]
 
 // ---- JWT helpers ----
