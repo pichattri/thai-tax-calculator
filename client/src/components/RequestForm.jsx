@@ -25,8 +25,8 @@ const PLATFORMS = [
 ]
 
 const CATEGORIES = [
-  { value: 'คนสวยอยากสวยตาม', label: '1. คนสวย' },
-  { value: 'คนดังไวรัล', label: '2. ไวรัล' },
+  { value: 'คนดัง', label: '1. คนดัง' },
+  { value: 'กำลังเป็นกระแส', label: '2. กำลังเป็นกระแส' },
   { value: 'Before-After', label: '3. Before-After' },
 ]
 

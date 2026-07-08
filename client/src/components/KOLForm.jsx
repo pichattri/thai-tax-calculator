@@ -22,7 +22,7 @@ const EMPTY = {
 const TYPE_OPTIONS = ['Tier1', 'Tier2', 'Tier3', 'KOC']
 const STATUS_OPTIONS = ['แจ้งเข้ามา', 'กำลังติดต่อ', 'รอ Insight', 'ปฏิเสธ', 'ตกลงแล้ว', 'ไม่ผ่านเกณฑ์พิจารณา']
 const APPOINTMENT_OPTIONS = ['', 'รอ Approve หัตถการ', 'Approve หัตถการแล้ว', 'ลงนัดหมายวันแล้ว']
-const CATEGORY_OPTIONS = ['คนสวยอยากสวยตาม', 'คนดังไวรัล', 'Before-After']
+const CATEGORY_OPTIONS = ['คนดัง', 'กำลังเป็นกระแส', 'Before-After']
 
 const TOOLTIPS = {
   saveRate: 'Save ÷ Reach × 100 จาก IG/TikTok Insight (ขอ Screenshot จาก KOL)',
