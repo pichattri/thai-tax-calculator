@@ -64,7 +64,7 @@ export default function RequestForm() {
   const setFollower = (id, val) => setFollowers(p => ({ ...p, [id]: val }))
 
   const hasSocial = Object.values(socials).some(v => v.trim())
-  const valid = requester.trim() && caseName.trim() && hasSocial && category
+  const valid = requester.trim() && caseName.trim() && hasSocial && category && purpose.trim()
 
   const reset = () => {
     setRequester(''); setCaseName(''); setSocials({ ...EMPTY })
@@ -203,7 +203,7 @@ export default function RequestForm() {
 
         {/* จุดประสงค์ */}
         <div>
-          <label className="kol-label">จุดประสงค์ในการขอเคส</label>
+          <label className="kol-label">จุดประสงค์ในการขอเคส *</label>
           <textarea
             value={purpose}
             onChange={e => setPurpose(e.target.value)}
