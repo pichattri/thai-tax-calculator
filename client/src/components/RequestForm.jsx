@@ -55,6 +55,7 @@ export default function RequestForm() {
   const [socials, setSocials] = useState({ ...EMPTY })
   const [followers, setFollowers] = useState({ ...EMPTY })
   const [category, setCategory] = useState('')
+  const [kolContact, setKolContact] = useState('')
   const [purpose, setPurpose] = useState('')
   const [saving, setSaving] = useState(false)
   const [done, setDone] = useState(false)
@@ -68,7 +69,7 @@ export default function RequestForm() {
 
   const reset = () => {
     setRequester(''); setCaseName(''); setSocials({ ...EMPTY })
-    setFollowers({ ...EMPTY }); setCategory(''); setPurpose('')
+    setFollowers({ ...EMPTY }); setCategory(''); setPurpose(''); setKolContact('')
   }
 
   const handleSubmit = async (e) => {
@@ -92,6 +93,7 @@ export default function RequestForm() {
         contact: contactStr,
         category,
         purpose: purpose.trim(),
+        note: kolContact.trim(),
         requester: requester.trim(),
         igAccount: socials.instagram,
         fbAccount: socials.facebook,
@@ -193,6 +195,17 @@ export default function RequestForm() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* ช่องทางติดต่อ KOL */}
+        <div>
+          <label className="kol-label">ช่องทางติดต่อ KOL <span className="text-gray-600">(ถ้ามี)</span></label>
+          <input
+            value={kolContact}
+            onChange={e => setKolContact(e.target.value)}
+            className="kol-input"
+            placeholder="เช่น LINE: @beauty_kol, DM IG, เบอร์โทร"
+          />
         </div>
 
         {/* หมวดหมู่ */}
