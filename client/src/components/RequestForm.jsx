@@ -231,6 +231,14 @@ export default function RequestForm() {
           </div>
         )}
 
+        {/* เกณฑ์คัดกรองเบื้องต้น */}
+        <div className="bg-navy rounded-xl border border-gray-700 p-4 text-xs text-gray-400 space-y-1.5">
+          <p className="text-gray-300 font-medium mb-2">📋 เกณฑ์คัดกรองขั้นต้น — Target ตรงกลุ่มมั้ย?</p>
+          <div className="flex items-center gap-2"><span className="text-accent">✓</span><span>% ผู้หญิง <span className="text-white font-medium">&gt; 70%</span></span></div>
+          <div className="flex items-center gap-2"><span className="text-accent">✓</span><span>% คนไทย <span className="text-white font-medium">&gt; 75%</span></span></div>
+          <div className="flex items-center gap-2"><span className="text-accent">✓</span><span>% ผู้เยาว์ต่ำกว่า 17 ปี <span className="text-white font-medium">&lt; 20%</span></span></div>
+        </div>
+
         <button
           type="submit"
           disabled={!valid || saving}
